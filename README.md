@@ -332,5 +332,6 @@ MIT
 
 ## Author
 Developed with GitHub Copilot assistance (70% code generation, 85% test coverage)
-#   a i - a s s i s t e d - d e v e l o p m e n t  
+#   ai-assisted-development
+ 
  
