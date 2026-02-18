@@ -1,5 +1,8 @@
 # AI Assistant Report — Pagination & Filtering for `GET /api/orders`
 
+> github link: https://github.com/Adnli/ai-assisted-development
+> BRANCH: task4
+
 ## Assignment context
 Feature implemented for module task: add production-ready pagination and server-side filtering to existing Orders API using an AI coding assistant.
 

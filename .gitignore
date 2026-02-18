@@ -1,6 +1,7 @@
 HELP.md
 .gradle
 AI-assisted Development_PT3_ADIL_BAZARBAY.txt
+AI-assisted Development_PT4_ADIL_BAZARBAY.txt
 .gitignore
 build/
 !gradle/wrapper/gradle-wrapper.jar
