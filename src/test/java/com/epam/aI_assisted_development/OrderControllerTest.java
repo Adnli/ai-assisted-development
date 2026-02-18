@@ -59,7 +59,7 @@ public class OrderControllerTest {
     void postCreatesOrder() throws Exception {
         String payload = "{\"customerName\":\"Alice\",\"status\":\"PAID\",\"amount\":10.50}";
 
-        mockMvc.perform(post("/orders")
+        mockMvc.perform(post("/api/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(payload))
                 .andExpect(status().isCreated())
@@ -75,17 +75,17 @@ public class OrderControllerTest {
         String nullStatus = "{\"customerName\":\"Bob\",\"status\":null,\"amount\":5.00}";
         String negativeAmount = "{\"customerName\":\"Bob\",\"status\":\"NEW\",\"amount\":-1.00}";
 
-        mockMvc.perform(post("/orders").contentType(MediaType.APPLICATION_JSON).content(blankName))
+        mockMvc.perform(post("/api/orders").contentType(MediaType.APPLICATION_JSON).content(blankName))
                 .andExpect(status().isBadRequest());
-        mockMvc.perform(post("/orders").contentType(MediaType.APPLICATION_JSON).content(nullStatus))
+        mockMvc.perform(post("/api/orders").contentType(MediaType.APPLICATION_JSON).content(nullStatus))
                 .andExpect(status().isBadRequest());
-        mockMvc.perform(post("/orders").contentType(MediaType.APPLICATION_JSON).content(negativeAmount))
+        mockMvc.perform(post("/api/orders").contentType(MediaType.APPLICATION_JSON).content(negativeAmount))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void getDefaultPagination() throws Exception {
-        mockMvc.perform(get("/orders"))
+        mockMvc.perform(get("/api/orders"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.page").value(1))
                 .andExpect(jsonPath("$.limit").value(10))
@@ -96,10 +96,10 @@ public class OrderControllerTest {
 
     @Test
     void getPage2DifferentItems() throws Exception {
-        String page1 = mockMvc.perform(get("/orders").param("page", "1").param("limit", "10"))
+        String page1 = mockMvc.perform(get("/api/orders").param("page", "1").param("limit", "10"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        String page2 = mockMvc.perform(get("/orders").param("page", "2").param("limit", "10"))
+        String page2 = mockMvc.perform(get("/api/orders").param("page", "2").param("limit", "10"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -112,21 +112,21 @@ public class OrderControllerTest {
 
     @Test
     void getInvalidPage() throws Exception {
-        mockMvc.perform(get("/orders").param("page", "0"))
+        mockMvc.perform(get("/api/orders").param("page", "0"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void getInvalidLimit() throws Exception {
-        mockMvc.perform(get("/orders").param("limit", "0"))
+        mockMvc.perform(get("/api/orders").param("limit", "0"))
                 .andExpect(status().isBadRequest());
-        mockMvc.perform(get("/orders").param("limit", "101"))
+        mockMvc.perform(get("/api/orders").param("limit", "101"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void filterByStatus() throws Exception {
-        mockMvc.perform(get("/orders").param("status", "PAID"))
+        mockMvc.perform(get("/api/orders").param("status", "PAID"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items", not(empty())))
                 .andExpect(jsonPath("$.items[*].status", everyItem(org.hamcrest.Matchers.is("PAID"))));
@@ -134,7 +134,7 @@ public class OrderControllerTest {
 
     @Test
     void filterByAmountRangeInclusive() throws Exception {
-        String response = mockMvc.perform(get("/orders")
+        String response = mockMvc.perform(get("/api/orders")
                         .param("minAmount", "50.00")
                         .param("maxAmount", "100.00"))
                 .andExpect(status().isOk())
@@ -150,7 +150,7 @@ public class OrderControllerTest {
 
     @Test
     void filterByDateRangeInclusive() throws Exception {
-        String response = mockMvc.perform(get("/orders")
+        String response = mockMvc.perform(get("/api/orders")
                         .param("fromDate", "2024-01-10T00:00:00Z")
                         .param("toDate", "2024-01-12T00:00:00Z"))
                 .andExpect(status().isOk())
@@ -169,7 +169,7 @@ public class OrderControllerTest {
 
     @Test
     void combinedFilters() throws Exception {
-        String response = mockMvc.perform(get("/orders")
+        String response = mockMvc.perform(get("/api/orders")
                         .param("status", "NEW")
                         .param("minAmount", "20.00")
                         .param("fromDate", "2024-01-05T00:00:00Z")
@@ -192,7 +192,7 @@ public class OrderControllerTest {
 
     @Test
     void emptyResultSet() throws Exception {
-        mockMvc.perform(get("/orders")
+        mockMvc.perform(get("/api/orders")
                         .param("status", "SHIPPED")
                         .param("minAmount", "1000.00")
                         .param("maxAmount", "2000.00"))
@@ -203,11 +203,11 @@ public class OrderControllerTest {
 
     @Test
     void invalidRanges() throws Exception {
-        mockMvc.perform(get("/orders")
+        mockMvc.perform(get("/api/orders")
                         .param("fromDate", "2024-02-01T00:00:00Z")
                         .param("toDate", "2024-01-01T00:00:00Z"))
                 .andExpect(status().isBadRequest());
-        mockMvc.perform(get("/orders")
+        mockMvc.perform(get("/api/orders")
                         .param("minAmount", "100.00")
                         .param("maxAmount", "10.00"))
                 .andExpect(status().isBadRequest());
@@ -215,7 +215,7 @@ public class OrderControllerTest {
 
     @Test
     void invalidDateFormat() throws Exception {
-        mockMvc.perform(get("/orders").param("fromDate", "not-a-date"))
+        mockMvc.perform(get("/api/orders").param("fromDate", "not-a-date"))
                 .andExpect(status().isBadRequest());
     }
 
