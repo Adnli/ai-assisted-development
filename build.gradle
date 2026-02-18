@@ -1,0 +1,60 @@
+// Add dependencies for: spring-boot-starter-web, spring-boot-starter-data-jpa,
+// spring-boot-starter-validation, h2, lombok (compileOnly + annotationProcessor),
+// spring-boot-starter-test, and optionally springdoc-openapi-starter-webmvc-ui.
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.0.2'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
+}
+
+group = 'com.epam'
+version = '0.0.1-SNAPSHOT'
+description = 'AI-assisted Development Task 3'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	runtimeOnly 'com.h2database:h2'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// Ensure test compile classpath includes MockMvc + Jackson even if starter resolution changes.
+	testImplementation 'org.springframework:spring-test'
+	testImplementation 'org.springframework.boot:spring-boot-test-autoconfigure'
+	testImplementation 'com.fasterxml.jackson.core:jackson-databind'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	finalizedBy tasks.jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn tasks.test
+	reports {
+		html.required = true
+		xml.required = true
+		csv.required = false
+	}
+}

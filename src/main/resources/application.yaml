@@ -1,0 +1,26 @@
+# Configure H2 in-memory DB, JPA ddl-auto update, show-sql false, and H2 console enabled.
+# Also set server port 8080 and spring.jackson.time-zone UTC.
+
+spring:
+  application:
+    name: aI-assisted-development
+  datasource:
+    url: jdbc:h2:mem:ordersdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+  h2:
+    console:
+      enabled: true
+  jackson:
+    time-zone: UTC
+
+server:
+  port: 8080
